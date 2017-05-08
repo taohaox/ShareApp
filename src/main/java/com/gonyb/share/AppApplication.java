@@ -5,20 +5,27 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.Arrays;
 
 @SpringBootApplication
 @EnableTransactionManagement//开启事物支持
-public class AppApplication {
+@EnableJpaRepositories
+public class AppApplication extends SpringBootServletInitializer {
 	private static final Logger logger = LoggerFactory.getLogger(AppApplication.class);
 	public static void main(String[] args) {
 		SpringApplication.run(AppApplication.class, args);
 	}
-
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(AppApplication.class);
+	}
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
