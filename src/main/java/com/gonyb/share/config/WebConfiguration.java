@@ -6,6 +6,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -19,6 +20,11 @@ public class WebConfiguration extends WebMvcConfigurerAdapter{
     public RemoteIpFilter remoteIpFilter() {
         return new RemoteIpFilter();
     }
+
+    /**
+     * 添加过滤器
+     * @return
+     */
     @Bean
     public FilterRegistrationBean testFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
@@ -30,6 +36,10 @@ public class WebConfiguration extends WebMvcConfigurerAdapter{
         return registration;
     }
 
+    /**
+     * 解决h5跨域问题
+     * @param registry
+     */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST", "OPTIONS", "PUT","DELETE")
@@ -37,5 +47,14 @@ public class WebConfiguration extends WebMvcConfigurerAdapter{
                         "Access-Control-Request-Headers")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")
                 .allowCredentials(true).maxAge(3600);
+    }
+
+    /**
+     * 解决404: No mapping found for HTTP request with URI [/] in DispatcherServlet with name 'dispatcherServlet'
+     * @param configurer
+     */
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
     }
 }
