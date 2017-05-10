@@ -59,14 +59,21 @@ public class ShareBicycleService {
         }
         byPassword.setUpdate_time(new Date());
         bicyclePwdRepository.save(byPassword); //保存密码记录 
+        return changePwd(sharedBicycleId);
+    }
 
+    /**
+     * 变更密码
+     * @param sharedBicycleId
+     * @return
+     */
+    private DoResult changePwd(Integer sharedBicycleId) {
         SharedBicycle one = bicycleRepository.findOne(sharedBicycleId);
-
         //按正确数排序
         List<SharedBicyclePwd> bySharedBicycleId = bicyclePwdRepository.findBySharedBicycleId(sharedBicycleId); //取出
         String password1 = bySharedBicycleId.get(0).getPassword();
         if(!password1.equals(one.getPassword())){//取出正确率最高的密码保存  如果和保存的不一致 则修改
-            one.setPassword(password);
+            one.setPassword(password1);
             bicycleRepository.save(one);
         }
         return DoResult.SUCCESS(bySharedBicycleId.get(0));
@@ -89,10 +96,11 @@ public class ShareBicycleService {
             byPassword.setUse_count(byPassword.getUse_count() + 1);
         } else {
             byPassword.setRight_count(byPassword.getRight_count() -1);
-            byPassword.setUse_count(byPassword.getUse_count() - 1);
+            byPassword.setUse_count(byPassword.getUse_count() + 1);
         } 
         byPassword.setUpdate_time(new Date());
         bicyclePwdRepository.save(byPassword); //保存密码记录 
+        changePwd(bicycleParam.getId());
         return DoResult.SUCCESS("已记录",null);
     }
     
