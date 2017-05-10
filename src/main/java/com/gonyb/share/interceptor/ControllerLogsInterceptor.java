@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * 拦截器：目测只是体验功能 不会使用
+ * AOP拦截器：目测只是体验功能 不会使用
  * 规则  在controller包下
  *       有 RequestMapping 注解 有 ControllerAnnotation 注解
  * Created by Gonyb on 2017/5/9.

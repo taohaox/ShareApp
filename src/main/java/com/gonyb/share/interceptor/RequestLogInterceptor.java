@@ -6,7 +6,6 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
@@ -27,6 +26,9 @@ public class RequestLogInterceptor extends HandlerInterceptorAdapter {
         String ip = request.getRemoteAddr();
         long startTime = System.currentTimeMillis();
         request.setAttribute("requestStartTime", startTime);
+        if(!(handler instanceof HandlerMethod)){
+            return true;
+        }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         // 获取用户token
         Method method = handlerMethod.getMethod();
@@ -45,18 +47,22 @@ public class RequestLogInterceptor extends HandlerInterceptorAdapter {
         }
         headerInfo.append("]");
         logger.debug(headerInfo.toString());
-        logger.info(request.getContextPath());
-
-        int len = request.getContentLength();
-        ServletInputStream iii = request.getInputStream();
-        byte[] buffer = new byte[len];
-        iii.read(buffer, 0, len);
-        logger.info("requestBody:{}",new String(buffer));
+//        logger.info(request.getContextPath());
+//        //clone HttpServletRequest
+//        request = new RepeatedlyReadRequestWrapper(request);
+//        int len = request.getContentLength();
+//        ServletInputStream iii = request.getInputStream();
+//        byte[] buffer = new byte[len];
+//        iii.read(buffer, 0, len);
+//        logger.info("requestBody:{}",new String(buffer));
         return true;// 只有返回true才会继续向下执行，返回false取消当前请求
     }
     // controller处理完成
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            ModelAndView modelAndView) throws Exception {
+        if(!(handler instanceof HandlerMethod)){
+            return;
+        }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
         long startTime = (Long) request.getAttribute("requestStartTime");
