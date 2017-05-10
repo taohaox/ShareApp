@@ -1,13 +1,10 @@
 package com.gonyb.share.config;
 
-import com.gonyb.share.filter.RestFilter;
+import com.gonyb.share.interceptor.RequestLogInterceptor;
 import org.apache.catalina.filters.RemoteIpFilter;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 
 /**
  * Created by Gonyb on 2017/5/4.
@@ -21,21 +18,6 @@ public class WebConfiguration extends WebMvcConfigurerAdapter{
     }
 
     /**
-     * 添加过滤器
-     * @return
-     */
-    @Bean
-    public FilterRegistrationBean testFilterRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new RestFilter());
-        registration.addUrlPatterns("/*");
-        registration.addInitParameter("paramName", "paramValue");
-        registration.setName("MyFilter");
-        registration.setOrder(1);
-        return registration;
-    }
-
-    /**
      * 解决h5跨域问题
      * @param registry
      */
@@ -46,5 +28,15 @@ public class WebConfiguration extends WebMvcConfigurerAdapter{
                         "Access-Control-Request-Headers")
                 .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")
                 .allowCredentials(true).maxAge(3600);
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new RequestLogInterceptor());
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        super.addResourceHandlers(registry);
     }
 }

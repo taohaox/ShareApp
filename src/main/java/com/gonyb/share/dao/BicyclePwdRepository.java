@@ -15,6 +15,6 @@ public interface BicyclePwdRepository extends JpaRepository<SharedBicyclePwd,Int
     @Query("select s from SharedBicyclePwd s where s.shared_bicycle_id=?1 order by s.right_count desc")
     List<SharedBicyclePwd> findBySharedBicycleId(Integer shared_bicycle_id);
 
-    @Query("select s from SharedBicyclePwd s where s.password=?1")
-    SharedBicyclePwd findByPassword(String password);
+    @Query("select s from SharedBicyclePwd s where s.password=?1 and s.shared_bicycle_id=?2")
+    SharedBicyclePwd findByPasswordAndBicycleId(String password,Integer id);
 }

@@ -1,6 +1,5 @@
 package com.gonyb.share.service;
 
-import com.gonyb.share.http.DoResult;
 import com.gonyb.share.dao.BicycleLogRepository;
 import com.gonyb.share.dao.BicyclePwdRepository;
 import com.gonyb.share.dao.BicycleRepository;
@@ -9,6 +8,8 @@ import com.gonyb.share.domain.SharedBicycle;
 import com.gonyb.share.domain.SharedBicycleLogs;
 import com.gonyb.share.domain.SharedBicyclePwd;
 import com.gonyb.share.domain.param.BicycleParam;
+import com.gonyb.share.domain.param.BicyclePasswordParam;
+import com.gonyb.share.http.DoResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,8 +45,8 @@ public class ShareBicycleService {
     }
 
     public DoResult saveBicyclePassword(String password,Integer sharedBicycleId){
-        SharedBicyclePwd byPassword = bicyclePwdRepository.findByPassword(password);
-        if (password != null) {  //密码记录增加
+        SharedBicyclePwd byPassword = bicyclePwdRepository.findByPasswordAndBicycleId(password,sharedBicycleId);
+        if (byPassword != null) {  //密码记录增加
             byPassword.setRight_count(byPassword.getRight_count() + 1);
             byPassword.setUse_count(byPassword.getUse_count() + 1);
         } else {
@@ -61,6 +62,7 @@ public class ShareBicycleService {
 
         SharedBicycle one = bicycleRepository.findOne(sharedBicycleId);
 
+        //按正确数排序
         List<SharedBicyclePwd> bySharedBicycleId = bicyclePwdRepository.findBySharedBicycleId(sharedBicycleId); //取出
         String password1 = bySharedBicycleId.get(0).getPassword();
         if(!password1.equals(one.getPassword())){//取出正确率最高的密码保存  如果和保存的不一致 则修改
@@ -69,8 +71,30 @@ public class ShareBicycleService {
         }
         return DoResult.SUCCESS(bySharedBicycleId.get(0));
     }
-    
-    
+
+    /**
+     * 记录密码是否正确
+     * @param bicycleParam
+     * @return
+     */
+    public DoResult passwordIsCorrect(BicyclePasswordParam bicycleParam) {
+        SharedBicyclePwd byPassword = bicyclePwdRepository.findByPasswordAndBicycleId
+                (bicycleParam.getPassword(),bicycleParam.getId());
+        if (byPassword == null) {
+            return DoResult.FAILED("无此密码记录");
+        } 
+        //正确数+1
+        if (bicycleParam.isCorrect()) {
+            byPassword.setRight_count(byPassword.getRight_count() + 1);
+            byPassword.setUse_count(byPassword.getUse_count() + 1);
+        } else {
+            byPassword.setRight_count(byPassword.getRight_count() -1);
+            byPassword.setUse_count(byPassword.getUse_count() - 1);
+        } 
+        byPassword.setUpdate_time(new Date());
+        bicyclePwdRepository.save(byPassword); //保存密码记录 
+        return DoResult.SUCCESS("已记录",null);
+    }
     
     /**
      * 保存访问日志
@@ -89,4 +113,5 @@ public class ShareBicycleService {
         bicycleLogRepository.save(sharedBicycleLogs);
     }
 
+    
 }
