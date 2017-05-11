@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Repository
 public interface BicyclePwdRepository extends JpaRepository<SharedBicyclePwd,Integer> {
-    @Query(value = "SELECT * FROM shared_bicycle_pwd s WHERE s.shared_bicycle_id=?1 ORDER BY s.right_count/s.use_count DESC",nativeQuery = true)
+    @Query(value = "SELECT * FROM shared_bicycle_pwd s WHERE s.shared_bicycle_id=?1 ORDER BY s.right_count/s.use_count,s.use_count DESC",nativeQuery = true)
     List<SharedBicyclePwd> findBySharedBicycleId(Integer shared_bicycle_id);
 
     @Query("select s from SharedBicyclePwd s where s.password=?1 and s.shared_bicycle_id=?2")
