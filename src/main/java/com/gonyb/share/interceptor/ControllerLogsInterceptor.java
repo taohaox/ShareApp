@@ -1,5 +1,6 @@
 package com.gonyb.share.interceptor;
 
+import com.alibaba.fastjson.JSONObject;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -58,6 +59,6 @@ public class ControllerLogsInterceptor {
     @AfterReturning(returning = "ret", pointcut = "controllerMethodPointcut()")
     public void doAfterReturning(Object ret) throws Throwable {
         // 处理完请求，返回内容
-        logger.info("response :[{}] " , ret);
+        logger.info("response :[{}] " , JSONObject.toJSONString(ret));
     }
 }
