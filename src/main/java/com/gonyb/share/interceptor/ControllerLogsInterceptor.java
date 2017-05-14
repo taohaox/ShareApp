@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Enumeration;
 
 /**
  * AOP拦截器：记录日志
@@ -48,12 +48,25 @@ public class ControllerLogsInterceptor {
         logger.info("HTTP_METHOD : " + request.getMethod());
         logger.info("IP : " + request.getRemoteAddr());
         logger.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+        logger.info("ARGS : " +  JSONObject.toJSONString(joinPoint.getArgs()));
+       //获取所有参数方法一：header
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("head[");
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while(headerNames.hasMoreElements()){
+            String s = headerNames.nextElement();
+            stringBuilder.append(s+": "+request.getHeader(s) +",");
+        }
+        stringBuilder.append("]\n queryParams[");
 
-        ServletInputStream inputStream = request.getInputStream();
-        int length = request.getContentLength();
-        byte[] bytes = new byte[length];
-        inputStream.read(bytes,0,length);
-        logger.info("requestBody:[{}]", new String(bytes));
+        Enumeration<String> enu=request.getParameterNames();
+        while(enu.hasMoreElements()){
+            String paraName = enu.nextElement();
+            stringBuilder.append(paraName+": "+request.getParameter(paraName));
+        }
+        stringBuilder.append("]");
+        logger.info(stringBuilder.toString());
+
     }
 
     @AfterReturning(returning = "ret", pointcut = "controllerMethodPointcut()")

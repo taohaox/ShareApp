@@ -20,7 +20,8 @@ public class GlobalExceptionHandler {
     //添加全局异常处理流程，根据需要设置需要处理的异常
     @ExceptionHandler(value = Exception.class)
     public DoResult defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
-        
-        return DoResult.FAILED();
+        logger.error("服务器异常 请求 url:{}",req.getRequestURL());
+        e.printStackTrace();
+        return DoResult.FAILED("服务器异常"+e.getMessage());
     }
 }
