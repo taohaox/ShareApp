@@ -32,22 +32,22 @@ public class ShareBicycleService {
 
     @Transactional
     public DoResult saveBicycleInfo(BicycleParam bicycleParam){
-//        SharedBicycle byCode = bicycleRepository.findByCode(bicycleParam.getShare_code());
-//        if (byCode == null) { //如果数据库没有此单车数据  则保存
-//            byCode = new SharedBicycle();
-//            byCode.setCreateTime(new Date());
-//            byCode.setShareCode(bicycleParam.getShare_code());
-//            byCode.setUpdateTime(new Date());
-//            byCode = bicycleRepository.save(byCode);
-//        }
-        SharedBicycle byShareCode = mongoRepository.findByShareCode(bicycleParam.getShare_code());
+        SharedBicycle byShareCode = bicycleRepository.findByCode(bicycleParam.getShare_code());
         if (byShareCode == null) { //如果数据库没有此单车数据  则保存
             byShareCode = new SharedBicycle();
             byShareCode.setCreateTime(new Date());
             byShareCode.setShareCode(bicycleParam.getShare_code());
             byShareCode.setUpdateTime(new Date());
-            byShareCode = mongoRepository.save(byShareCode);
+            byShareCode = bicycleRepository.save(byShareCode);
         }
+//        SharedBicycle byShareCode = mongoRepository.findByShareCode(bicycleParam.getShare_code());
+//        if (byShareCode == null) { //如果数据库没有此单车数据  则保存
+//            byShareCode = new SharedBicycle();
+//            byShareCode.setCreateTime(new Date());
+//            byShareCode.setShareCode(bicycleParam.getShare_code());
+//            byShareCode.setUpdateTime(new Date());
+//            byShareCode = mongoRepository.save(byShareCode);
+//        }
         saveBicyclerLog(bicycleParam, byShareCode.getId());
         return DoResult.SUCCESS(byShareCode);
     }
