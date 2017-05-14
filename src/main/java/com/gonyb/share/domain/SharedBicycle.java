@@ -1,5 +1,7 @@
 package com.gonyb.share.domain;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -9,31 +11,34 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "shared_bicycle")
+@Document(collection = "bicycle")
 public class SharedBicycle {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
-    @Column(nullable = false, unique = true)
-    private String share_code;
+    @Column(name = "share_code",nullable = false, unique = true)
+    private String shareCode;
     private String password;
-    private Date create_time;
-    private Date update_time;
+    @Column(name = "createTime")
+    private Date createTime;
+    @Column(name = "updateTime")
+    private Date updateTime;
 
     
-    public Date getCreate_time() {
-        return create_time;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreate_time(Date create_time) {
-        this.create_time = create_time;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public Date getUpdate_time() {
-        return update_time;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdate_time(Date update_time) {
-        this.update_time = update_time;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
     public Integer getId() {
         return id;
@@ -43,12 +48,12 @@ public class SharedBicycle {
         this.id = id;
     }
 
-    public String getShare_code() {
-        return share_code;
+    public String getShareCode() {
+        return shareCode;
     }
 
-    public void setShare_code(String share_code) {
-        this.share_code = share_code;
+    public void setShareCode(String shareCode) {
+        this.shareCode = shareCode;
     }
 
     public String getPassword() {

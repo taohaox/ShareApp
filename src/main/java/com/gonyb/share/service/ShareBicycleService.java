@@ -1,9 +1,6 @@
 package com.gonyb.share.service;
 
-import com.gonyb.share.dao.BicycleLogRepository;
-import com.gonyb.share.dao.BicyclePwdRepository;
-import com.gonyb.share.dao.BicycleRepository;
-import com.gonyb.share.dao.ShareBicycleDao;
+import com.gonyb.share.dao.*;
 import com.gonyb.share.domain.SharedBicycle;
 import com.gonyb.share.domain.SharedBicycleLogs;
 import com.gonyb.share.domain.SharedBicyclePwd;
@@ -30,18 +27,29 @@ public class ShareBicycleService {
     BicycleLogRepository bicycleLogRepository;
     @Autowired
     BicyclePwdRepository bicyclePwdRepository;
+    @Autowired
+    MongoBicycleRepository mongoRepository;
+
     @Transactional
     public DoResult saveBicycleInfo(BicycleParam bicycleParam){
-        SharedBicycle byCode = bicycleRepository.findByCode(bicycleParam.getShare_code());
-        if (byCode == null) { //如果数据库没有此单车数据  则保存
-            byCode = new SharedBicycle();
-            byCode.setCreate_time(new Date());
-            byCode.setShare_code(bicycleParam.getShare_code());
-            byCode.setUpdate_time(new Date());
-            byCode = bicycleRepository.save(byCode);
+//        SharedBicycle byCode = bicycleRepository.findByCode(bicycleParam.getShare_code());
+//        if (byCode == null) { //如果数据库没有此单车数据  则保存
+//            byCode = new SharedBicycle();
+//            byCode.setCreateTime(new Date());
+//            byCode.setShareCode(bicycleParam.getShare_code());
+//            byCode.setUpdateTime(new Date());
+//            byCode = bicycleRepository.save(byCode);
+//        }
+        SharedBicycle byShareCode = mongoRepository.findByShareCode(bicycleParam.getShare_code());
+        if (byShareCode == null) { //如果数据库没有此单车数据  则保存
+            byShareCode = new SharedBicycle();
+            byShareCode.setCreateTime(new Date());
+            byShareCode.setShareCode(bicycleParam.getShare_code());
+            byShareCode.setUpdateTime(new Date());
+            byShareCode = mongoRepository.save(byShareCode);
         }
-        saveBicyclerLog(bicycleParam, byCode.getId());
-        return DoResult.SUCCESS(byCode);
+        saveBicyclerLog(bicycleParam, byShareCode.getId());
+        return DoResult.SUCCESS(byShareCode);
     }
 
     public DoResult saveBicyclePassword(String password,Integer sharedBicycleId){

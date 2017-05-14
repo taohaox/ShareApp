@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface BicycleRepository extends JpaRepository<SharedBicycle,Integer> {
-    @Query("select s from SharedBicycle s where s.share_code=?1")
+    @Query("select s from SharedBicycle s where s.shareCode=?1")
     SharedBicycle findByCode(String share_code);
 }

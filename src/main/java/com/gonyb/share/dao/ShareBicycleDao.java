@@ -17,7 +17,7 @@ public class ShareBicycleDao {
     
     public int save(SharedBicycle sharedBicycle) {
         return jdbcTemplate.update("insert into shared_bicycle(share_code, create_time,update_time) values(?, ?,?)",
-                sharedBicycle.getShare_code(),new Date(),new Date());
+                sharedBicycle.getShareCode(),new Date(),new Date());
 
     }
 }
