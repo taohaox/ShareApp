@@ -5,10 +5,7 @@ import com.gonyb.share.domain.param.BicyclePasswordParam;
 import com.gonyb.share.http.DoResult;
 import com.gonyb.share.service.ShareBicycleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -48,5 +45,14 @@ public class ShareBicycleController {
     @RequestMapping(value = "/passwordIsCorrect",method = RequestMethod.POST)
     public DoResult passwordIsCorrect(@RequestBody BicyclePasswordParam bicycleParam){
         return shareBicycleService.passwordIsCorrect(bicycleParam);
+    }
+
+    /**
+     * 模糊查询测试
+     * @return
+     */
+    @RequestMapping(value = "/getPassword/{keyword}",method = RequestMethod.GET)
+    public DoResult getPassword(@PathVariable String keyword){
+        return shareBicycleService.getPassword(keyword);
     }
 }

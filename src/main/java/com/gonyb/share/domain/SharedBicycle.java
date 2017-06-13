@@ -1,7 +1,5 @@
 package com.gonyb.share.domain;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -11,7 +9,6 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "shared_bicycle")
-@Document(collection = "bicycle")
 public class SharedBicycle {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -19,9 +16,9 @@ public class SharedBicycle {
     @Column(name = "share_code",nullable = false, unique = true)
     private String shareCode;
     private String password;
-    @Column(name = "createTime")
+    @Column(name = "create_time")
     private Date createTime;
-    @Column(name = "updateTime")
+    @Column(name = "update_time")
     private Date updateTime;
 
     

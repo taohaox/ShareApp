@@ -7,10 +7,12 @@ import com.gonyb.share.domain.SharedBicyclePwd;
 import com.gonyb.share.domain.param.BicycleParam;
 import com.gonyb.share.domain.param.BicyclePasswordParam;
 import com.gonyb.share.http.DoResult;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -19,20 +21,21 @@ import java.util.List;
  */
 @Service
 public class ShareBicycleService {
-    @Autowired
+    private static final Logger logger = LoggerFactory.getLogger(ShareBicycleService.class);
+    @Resource
     ShareBicycleDao shareBicycleDao;
-    @Autowired
-    BicycleRepository bicycleRepository;
-    @Autowired
-    BicycleLogRepository bicycleLogRepository;
-    @Autowired
-    BicyclePwdRepository bicyclePwdRepository;
-    @Autowired
-    MongoBicycleRepository mongoRepository;
+    @Resource
+    private BicycleRepository bicycleRepository;
+    @Resource
+    private BicycleLogRepository bicycleLogRepository;
+    @Resource
+    private BicyclePwdRepository bicyclePwdRepository;
+    @Resource
+    private MongoBicycleRepository mongoRepository;
 
     @Transactional
     public DoResult saveBicycleInfo(BicycleParam bicycleParam){
-        SharedBicycle byShareCode = bicycleRepository.findByCode(bicycleParam.getShare_code());
+        SharedBicycle byShareCode = bicycleRepository.findByShareCode(bicycleParam.getShare_code());
         if (byShareCode == null) { //如果数据库没有此单车数据  则保存
             byShareCode = new SharedBicycle();
             byShareCode.setCreateTime(new Date());
@@ -129,5 +132,10 @@ public class ShareBicycleService {
         bicycleLogRepository.save(sharedBicycleLogs);
     }
 
-    
+
+    public DoResult getPassword(String keyword) {
+        logger.info(keyword);
+        List<SharedBicyclePwd> test = bicyclePwdRepository.test(keyword);
+        return DoResult.SUCCESS(test);
+    }
 }

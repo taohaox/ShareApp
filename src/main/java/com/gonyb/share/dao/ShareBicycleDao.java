@@ -1,10 +1,10 @@
 package com.gonyb.share.dao;
 
 import com.gonyb.share.domain.SharedBicycle;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
 import java.util.Date;
 
 /**
@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Repository
 public class ShareBicycleDao {
-    @Autowired
+    @Resource
     private JdbcTemplate jdbcTemplate;
     
     public int save(SharedBicycle sharedBicycle) {

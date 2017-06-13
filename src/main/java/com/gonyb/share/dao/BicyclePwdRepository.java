@@ -17,4 +17,8 @@ public interface BicyclePwdRepository extends JpaRepository<SharedBicyclePwd,Int
 
     @Query("select s from SharedBicyclePwd s where s.password=?1 and s.shared_bicycle_id=?2")
     SharedBicyclePwd findByPasswordAndBicycleId(String password,Integer id);
+
+
+    @Query(value = "select s from SharedBicyclePwd s where s.password like CONCAT('%',?1,'%')")
+    List<SharedBicyclePwd> test(String keyword);
 }

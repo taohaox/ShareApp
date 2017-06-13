@@ -16,7 +16,7 @@ import java.util.Enumeration;
  * Created by Gonyb on 2017/5/9.
  */
 public class RequestLogInterceptor extends HandlerInterceptorAdapter {
-    private static final Logger logger = LoggerFactory.getLogger(ControllerLogsInterceptor.class);
+    private static final Logger logger = LoggerFactory.getLogger(RequestLogInterceptor.class);
     /**
      * 前置检查
      */
